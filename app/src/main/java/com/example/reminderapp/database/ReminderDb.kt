@@ -15,7 +15,7 @@ abstract class ReminderDb : RoomDatabase() {
         @Volatile
         private var Instance: ReminderDb? = null
         private val Lock = Any()
-        private const val DATABASE_NAME = "reminderdb"
+         const val DATABASE_NAME = "reminderdb"
         operator fun invoke(context: Context) = Instance ?: synchronized(Lock) {
             Instance ?: createDatabase(context).also { Instance = it }
         }
