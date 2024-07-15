@@ -21,6 +21,8 @@ class ReminderViewModel @Inject constructor(
     private val state: StateFlow<ReminderState> = _state.asStateFlow()
     private var getAllReminderJob: Job? = null
     fun onEvent(event: ReminderEvent) {
+
+        //passando os eventos para o useCase
         when (event) {
             is ReminderEvent.DeleteReminder -> {
                 viewModelScope.launch {

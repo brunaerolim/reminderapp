@@ -15,7 +15,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ListSection() {
+fun ListSection(
+    //viewModel: ReminderViewModel = hiltViewModel() ----> nao encontro o hiltViewModel
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,6 +35,8 @@ fun ListSection() {
             )
             IconButton(
                 onClick = {
+
+                          //viewModel.deleteReminder(reminder) ----> nao encontr o evento deleteReminder
 
                 },
                 modifier = Modifier.padding(6.dp, 0.dp, 10.dp, 10.dp)

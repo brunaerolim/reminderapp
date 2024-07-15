@@ -11,17 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -88,37 +81,6 @@ fun ReminderDate() {
             shape = MaterialTheme.shapes.small,
             textStyle = TextStyle(color = Color.LightGray)
         )
-        if (openDialog.value) {
-            DatePickerDialog(
-                colors = DatePickerDefaults.colors(
-                    containerColor = Color(0xFFF5F0FF),
-                ),
-                onDismissRequest = {
-                    openDialog.value = false
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                        }
-                    ) {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                        }
-                    ) {
-                        Text("Cancelar")
-                    }
-                }
-            ) {
-                DatePicker(
-                    state = datePickerState,
-                )
-            }
-        }
+
     }
 }

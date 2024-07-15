@@ -1,5 +1,7 @@
 package com.example.reminderapp.ui.theme.uilayer
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +28,7 @@ import com.example.reminderapp.ui.theme.uilayer.components.PrimaryButton
 import com.example.reminderapp.ui.theme.uilayer.components.ReminderDate
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReminderScreen(
 ) {
@@ -45,9 +48,10 @@ fun ReminderScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReminderTitle() {
+fun ReminderTitle(
+    //viewModel: ReminderViewModel = hiltViewModel() ----> nao encontro o hiltViewModel
+) {
 
     Row(
         modifier = Modifier
@@ -92,7 +96,9 @@ fun ReminderTitle() {
 fun SaveButton(
 ) {
     PrimaryButton(
-        onClick = {},
+        onClick = {
+            //viewModel.saveReminder() ----> nao encontro o evento saveReminder
+        },
         title = "Salvar",
     )
 }
