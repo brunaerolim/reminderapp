@@ -72,7 +72,7 @@ fun ReminderTitle() {
 
             },
             modifier = Modifier
-                .padding(0.dp, 12.dp, 12.dp)
+                .padding(0.dp, 12.dp, 12.dp, 10.dp)
                 .fillMaxWidth(),
             textStyle = TextStyle(color = Color.LightGray),
             shape = MaterialTheme.shapes.small,
