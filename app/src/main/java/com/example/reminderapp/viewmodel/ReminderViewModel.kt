@@ -1,47 +1,48 @@
+package com.example.reminderapp.viewmodel
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.reminderapp.repositories.usecases.ReminderUseCase
-import com.example.reminderapp.viewmodel.states.ReminderEvent
-import com.example.reminderapp.viewmodel.states.ReminderState
+import com.example.reminderapp.model.Reminder
+import com.example.reminderapp.repositories.ReminderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ReminderViewModel @Inject constructor(
-    private val reminderUseCase: ReminderUseCase
+    private val repository: ReminderRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(ReminderState(reminderUseCase.addReminder))
-    private val state: StateFlow<ReminderState> = _state.asStateFlow()
-    private var getAllReminderJob: Job? = null
-    fun onEvent(event: ReminderEvent) {
 
-        //passando os eventos para o useCase
-        when (event) {
-            is ReminderEvent.DeleteReminder -> {
-                viewModelScope.launch {
-                    reminderUseCase.deleteReminder(event.reminderModel)
-                }
-            }
+    private val _reminders = MutableStateFlow<List<Reminder>>(emptyList())
+    val reminders: StateFlow<List<Reminder>> = _reminders
 
-            is ReminderEvent.AddReminder -> {
-                _state.value = state.value.copy(addReminder = reminderUseCase.addReminder)
-            }
+    private val _selectedDate = MutableStateFlow<String>("")
+    val selectedDate: StateFlow<String> = _selectedDate
 
-            is ReminderEvent.GetAllReminders -> {
-                getAllReminderJob?.cancel()
-                getAllReminderJob = reminderUseCase.getReminder()
-                    .onEach { _ ->
-                        _state.value = state.value.copy()
-                    }
-                    .launchIn(viewModelScope)
-            }
+    private fun loadReminders(date: String) {
+        viewModelScope.launch {
+            _reminders.value = repository.getRemindersByDate(date)
         }
+    }
+
+    fun addReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            repository.addReminder(reminder)
+            loadReminders(reminder.date)
+        }
+    }
+
+    fun deleteReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            repository.deleteReminder(reminder)
+            loadReminders(reminder.date)
+        }
+    }
+
+    fun setSelectedDate(date: String) {
+        _selectedDate.value = date
+        loadReminders(date)
     }
 }

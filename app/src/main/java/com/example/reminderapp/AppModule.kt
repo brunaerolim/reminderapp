@@ -1,48 +1,40 @@
 package com.example.reminderapp
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
+import com.example.reminderapp.database.ReminderDao
 import com.example.reminderapp.database.ReminderDb
-import com.example.reminderapp.database.ReminderDb.Companion.DATABASE_NAME
 import com.example.reminderapp.repositories.ReminderRepository
-import com.example.reminderapp.repositories.RepositoryImpl
-import com.example.reminderapp.repositories.usecases.AddReminder
-import com.example.reminderapp.repositories.usecases.DeleteReminder
-import com.example.reminderapp.repositories.usecases.GetReminder
-import com.example.reminderapp.repositories.usecases.ReminderUseCase
+import com.example.reminderapp.repositories.ReminderRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
-    fun provideReminderDb(app: Application): ReminderDb {
+    fun provideDatabase(@ApplicationContext appContext: Context): ReminderDb {
         return Room.databaseBuilder(
-            app,
+            appContext,
             ReminderDb::class.java,
-            DATABASE_NAME
-        ).build(
-        )
+            "reminder_database"
+        ).build()
+    }
+
+    @Provides
+    fun provideReminderDao(database: ReminderDb): ReminderDao {
+        return database.reminderDao()
     }
 
     @Provides
     @Singleton
-    fun provideReminderRepository(db: ReminderDb): ReminderRepository {
-        return RepositoryImpl(db.reminderDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideReminderUseCases(repository: ReminderRepository): ReminderUseCase {
-        return ReminderUseCase(
-            DeleteReminder(repository),
-            AddReminder(repository),
-            GetReminder(repository)
-        )
+    fun provideReminderRepository(reminderDao: ReminderDao): ReminderRepository {
+        return ReminderRepositoryImpl(reminderDao)
     }
 }

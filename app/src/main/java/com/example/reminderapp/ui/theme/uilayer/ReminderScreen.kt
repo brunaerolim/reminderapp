@@ -1,113 +1,180 @@
 package com.example.reminderapp.ui.theme.uilayer
 
+import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.reminderapp.ui.theme.uilayer.components.PrimaryButton
-import com.example.reminderapp.ui.theme.uilayer.components.ReminderDate
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.reminderapp.model.Reminder
+import com.example.reminderapp.viewmodel.ReminderViewModel
+import java.util.Calendar
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReminderScreen(
-) {
-    Box {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-        ) {
+fun ReminderScreen(viewModel: ReminderViewModel = hiltViewModel()) {
+    val reminders by viewModel.reminders.collectAsState()
+    val selectedDate by viewModel.selectedDate.collectAsState()
 
-            ReminderTitle()
-            ReminderDate()
-            SaveButton()
-            ListText()
-            ListSection()
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Text(
+            "Novo lembrete",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        AddReminder(viewModel)
+        DateSelector(selectedDate) { date -> viewModel.setSelectedDate(date) }
+        Text(
+            "Lista de lembretes",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+        ReminderList(reminders, onDelete = { viewModel.deleteReminder(it) })
+    }
+}
+
+@Composable
+fun DateSelector(selectedDate: String, onDateSelected: (String) -> Unit) {
+    val context = LocalContext.current
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 8.dp)
+    ) {
+        OutlinedTextField(
+            value = selectedDate,
+            onValueChange = {},
+            label = { Text("Selecionar data") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = {
+                    showDatePicker(context) { date ->
+                        onDateSelected(date)
+                    }
+                }) {
+                    Icon(Icons.Default.DateRange, contentDescription = "Select Date")
+                }
+            },
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun ReminderList(reminders: List<Reminder>, onDelete: (Reminder) -> Unit) {
+    LazyColumn {
+        items(reminders) { reminder ->
+            ReminderItem(reminder, onDelete)
         }
     }
 }
 
 @Composable
-fun ReminderTitle(
-    //viewModel: ReminderViewModel = hiltViewModel() ----> nao encontro o hiltViewModel
-) {
-
+fun ReminderItem(reminder: Reminder, onDelete: (Reminder) -> Unit) {
     Row(
         modifier = Modifier
-            .padding(6.dp, 0.dp, 10.dp, 10.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
     ) {
         Text(
-            text = "Nome",
-            modifier = Modifier
-                .padding(8.dp, 20.dp, 0.dp, 10.dp)
-                .background(Color.hsl(0f, 0f, 0.92f))
-                .border(1.dp, Color.LightGray)
-                .padding(10.dp, 20.dp, 9.dp, 16.dp),
-            fontSize = 15.sp,
-            style = TextStyle(color = Color.LightGray),
-            textAlign = TextAlign.Start
+            text = reminder.title,
+            modifier = Modifier.weight(1f)
         )
-        OutlinedTextField(
-            value = "",
-            onValueChange = {
-
-            },
-            modifier = Modifier
-                .padding(0.dp, 12.dp, 12.dp, 10.dp)
-                .fillMaxWidth(),
-            textStyle = TextStyle(color = Color.LightGray),
-            shape = MaterialTheme.shapes.small,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Title",
-                    tint = Color.LightGray
-                )
-            }
-
-        )
+        IconButton(onClick = { onDelete(reminder) }) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete Reminder", tint = Color.Red)
+        }
     }
 }
 
 @Composable
-fun SaveButton(
-) {
-    PrimaryButton(
-        onClick = {
-            //viewModel.saveReminder() ----> nao encontro o evento saveReminder
-        },
-        title = "Salvar",
-    )
+fun AddReminder(viewModel: ReminderViewModel) {
+    var title by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    Column {
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text("Nome do lembrete") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        )
+        OutlinedTextField(
+            value = date,
+            onValueChange = { date = it },
+            label = { Text("Data do lembrete (no formato dd/mm/yyyy)") },
+            readOnly = true,
+            trailingIcon = {
+                IconButton(onClick = {
+                    showDatePicker(context) { selectedDate ->
+                        date = selectedDate
+                    }
+                }) {
+                    Icon(Icons.Default.DateRange, contentDescription = "Select Date")
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        )
+        Button(
+            onClick = {
+                if (title.isNotEmpty() && date.isNotEmpty()) {
+                    val reminder = Reminder(title = title, date = date)
+                    viewModel.addReminder(reminder)
+                    title = ""
+                    date = ""
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(vertical = 8.dp)
+        ) {
+            Text("Criar")
+        }
+    }
 }
 
-@Composable
-fun ListText() {
-    Text(
-        text = "Lista de Lembretes",
-        modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 10.dp),
-        fontSize = 20.sp
-    )
+fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    DatePickerDialog(context, { _, selectedYear, selectedMonth, selectedDay ->
+        val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+        onDateSelected(selectedDate)
+    }, year, month, day).show()
 }
