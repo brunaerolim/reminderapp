@@ -1,5 +1,7 @@
 package com.example.reminderapp.ui.theme.uilayer.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,23 +23,33 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReminderDate() {
-    val datePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Picker)
-    val openDialog = remember { mutableStateOf(false) }
+    var pickedDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
+    val formattedDate by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("dd/MM/yyyy")
+                .format(pickedDate)
+        }
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +106,6 @@ fun ReminderDate() {
                     }
                 },
                 dismissButton = {
-                    // Dismiss button to close the dialog without selecting a date
                     TextButton(
                         onClick = {
                             openDialog.value = false
@@ -104,23 +115,10 @@ fun ReminderDate() {
                     }
                 }
             ) {
-                // The actual DatePicker component within the dialog
                 DatePicker(
                     state = datePickerState,
                 )
             }
         }
     }
-}
-
-fun Long.convertMillisToDate(): String {
-    val calendar = Calendar.getInstance().apply {
-        timeInMillis = this@convertMillisToDate
-        val zoneOffset = get(Calendar.ZONE_OFFSET)
-        val dstOffset = get(Calendar.DST_OFFSET)
-        add(Calendar.MILLISECOND, -(zoneOffset + dstOffset))
-    }
-    // Format the calendar time in the specified format
-    val sdf = SimpleDateFormat("dd MM yyyy", Locale.forLanguageTag("pt-BR"))
-    return sdf.format(calendar.time)
 }
