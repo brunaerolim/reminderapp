@@ -8,7 +8,7 @@ import java.util.Date
 @Entity(tableName = "reminders")
 data class Reminder(
     @PrimaryKey(autoGenerate = true)
-    val id: Int ,
+    val id: Int,
     val title: String,
     val date: Date
 )

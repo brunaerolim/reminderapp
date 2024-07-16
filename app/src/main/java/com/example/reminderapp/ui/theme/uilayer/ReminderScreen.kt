@@ -1,14 +1,16 @@
 package com.example.reminderapp.ui.theme.uilayer
 
-import androidx.compose.foundation.background
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,54 +18,91 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.reminderapp.ui.theme.uilayer.screen.ReminderList
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.reminderapp.ui.theme.uilayer.screen.components.showDatePickerDialog
 import com.example.reminderapp.viewmodel.ReminderViewModel
-import java.util.Calendar
-import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 
 @Composable
-fun ReminderScreen(viewModel: ReminderViewModel = hiltViewModel()) {
-    val reminders by viewModel.reminders.collectAsState()
+fun ReminderScreen(reminderViewModel: ReminderViewModel = viewModel()) {
+    val context = LocalContext.current
+    val selectedDate by reminderViewModel.selectedDate.collectAsState()
+    val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
+    var title by remember { mutableStateOf("") }
+    var titleError by remember { mutableStateOf(false) }
+    var dateError by remember { mutableStateOf(false) }
 
-    var title by remember { mutableStateOf(TextFieldValue("")) }
-    var date by remember { mutableStateOf(Date()) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        OutlinedTextField(
+            value = title,
+            onValueChange = {
+                title = it
+                titleError = title.isEmpty()
+            },
+            label = { Text("Title") },
+            isError = titleError,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (titleError) {
+            Text(
+                text = "Title cannot be empty",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Novo Lembrete", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
-        BasicTextField(
-            value = title,
-            onValueChange = { title = it },
+        OutlinedTextField(
+            value = if (selectedDate != null) dateFormat.format(selectedDate) else "",
+            onValueChange = {},
+            label = { Text("Date") },
+            readOnly = true,
+            isError = dateError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
-                .background(MaterialTheme.colorScheme.surface)
+                .clickable {
+                    showDatePickerDialog(context) { date ->
+                        reminderViewModel.updateSelectedDate(date)
+                        dateError = false
+                    }
+                }
         )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = {
-            date = Calendar.getInstance().time
-        }) {
-            Text("Selecionar Data")
+        if (dateError) {
+            Text(
+                text = "Date cannot be empty",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = {
-            if (title.text.isNotEmpty()) {
-                viewModel.addReminder(title.text, date)
-                title = TextFieldValue("")
-            }
-        }) {
-            Text("Criar")
-        }
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Lista de Lembretes", style = MaterialTheme.typography.titleMedium)
-        ReminderList(reminders = reminders, onDelete = viewModel::deleteReminder)
+        Button(
+            onClick = {
+                titleError = title.isEmpty()
+                dateError = selectedDate == null
+
+                if (!titleError && !dateError) {
+                    reminderViewModel.addReminder(title, selectedDate!!)
+                    Toast.makeText(context, "com.example.reminderapp.model.Reminder added", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                }
+            },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Add com.example.reminderapp.model.Reminder")
+        }
     }
 }

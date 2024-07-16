@@ -24,4 +24,3 @@ object AppModule {
     @Provides
     fun provideReminderDao(db: ReminderDb): ReminderDao = db.reminderDao()
 }
-

@@ -1,8 +1,9 @@
 package com.example.reminderapp.database
 
-import androidx.room.*
 import com.example.reminderapp.model.Reminder
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface ReminderDao {
     @Query("SELECT * FROM reminders ORDER BY date")
@@ -14,4 +15,3 @@ interface ReminderDao {
     @Delete
     suspend fun deleteReminder(reminder: Reminder)
 }
-
