@@ -31,3 +31,4 @@ fun ReminderList(reminders: List<Reminder>, onDelete: (Reminder) -> Unit) {
         }
     }
 }
+

@@ -11,23 +11,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
-
 @HiltViewModel
-class ReminderViewModel @Inject constructor(private val repository: ReminderRepository) :
-    ViewModel() {
+class ReminderViewModel @Inject constructor(
+    private val reminderRepository: ReminderRepository
+) : ViewModel() {
 
-    val reminders: StateFlow<List<Reminder>> = repository.getAllReminders()
+    val reminders: StateFlow<List<Reminder>> = reminderRepository.getAllReminders()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun addReminder(title: String, date: Date) {
+        val reminder = Reminder(title = title, date = date)
         viewModelScope.launch {
-            repository.insertReminder(Reminder(title = title, date = date))
+            reminderRepository.insertReminder(reminder)
         }
     }
 
     fun deleteReminder(reminder: Reminder) {
         viewModelScope.launch {
-            repository.deleteReminder(reminder)
+            reminderRepository.deleteReminder(reminder)
         }
     }
 }

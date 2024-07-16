@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class ReminderRepository @Inject constructor(private val reminderDao: ReminderDao) {
     fun getAllReminders(): Flow<List<Reminder>> = reminderDao.getAllReminders()

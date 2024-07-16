@@ -1,4 +1,5 @@
 package com.example.reminderapp.database
+
 import androidx.room.*
 import com.example.reminderapp.model.Reminder
 import kotlinx.coroutines.flow.Flow
@@ -14,3 +15,4 @@ interface ReminderDao {
     @Delete
     suspend fun deleteReminder(reminder: Reminder)
 }
+
