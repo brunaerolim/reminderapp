@@ -1,18 +1,29 @@
 package com.example.reminderapp.ui.theme.uilayer
+
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.reminderapp.ui.theme.uilayer.screen.ReminderList
 import com.example.reminderapp.viewmodel.ReminderViewModel
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @Composable
 fun ReminderScreen(viewModel: ReminderViewModel = hiltViewModel()) {
@@ -28,7 +39,8 @@ fun ReminderScreen(viewModel: ReminderViewModel = hiltViewModel()) {
         BasicTextField(
             value = title,
             onValueChange = { title = it },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(8.dp)
                 .background(MaterialTheme.colorScheme.surface)
         )

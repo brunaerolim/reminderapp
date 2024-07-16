@@ -3,7 +3,6 @@ package com.example.reminderapp.database
 import androidx.room.*
 import com.example.reminderapp.model.Reminder
 import kotlinx.coroutines.flow.Flow
-
 @Dao
 interface ReminderDao {
     @Query("SELECT * FROM reminders ORDER BY date")
