@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 
+
 class ReminderViewModel(private val reminderRepository: ReminderRepository) : ViewModel() {
     private val _selectedDate = MutableStateFlow<Date?>(null)
     val selectedDate: StateFlow<Date?> get() = _selectedDate
@@ -32,4 +33,3 @@ class ReminderViewModel(private val reminderRepository: ReminderRepository) : Vi
         }
     }
 }
-

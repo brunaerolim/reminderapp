@@ -1,4 +1,4 @@
-package com.example.reminderapp.ui.theme.uilayer.screen.components
+package com.example.reminderapp.ui.theme.uilayer.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.reminderapp.model.Reminder
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 @Composable
 fun ReminderItem(reminder: Reminder, onDelete: (Reminder) -> Unit) {

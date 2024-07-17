@@ -38,6 +38,15 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = koinViewModel()) {
     var title by remember { mutableStateOf("") }
     var titleError by remember { mutableStateOf(false) }
     var dateError by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    if (showDatePicker) {
+        showDatePickerDialog(context) { date ->
+            reminderViewModel.updateSelectedDate(date)
+            dateError = false
+            showDatePicker = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -65,7 +74,6 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = koinViewModel()) {
                     color = Color.DarkGray,
                 )
             }
-
         )
         if (titleError) {
             Text(
@@ -85,10 +93,7 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = koinViewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    showDatePickerDialog(context) { date ->
-                        reminderViewModel.updateSelectedDate(date)
-                        dateError = false
-                    }
+                    showDatePicker = true
                 },
             label = {
                 Text(
@@ -96,7 +101,6 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = koinViewModel()) {
                     color = Color.DarkGray,
                 )
             }
-
         )
         if (dateError) {
             Text(
