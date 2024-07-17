@@ -1,8 +1,9 @@
 # Descrição do Arquivo
 
-## ReminderViewModel
+#### ReminderViewModel
 
-Gerenciamento do Ciclo de Vida: Extende ViewModel para armazenar e gerenciar dados relacionados à UI
+Gerenciamento do Ciclo de Vida: Extende **ViewModel** para armazenar e gerenciar dados relacionados
+à UI
 de maneira mais robusta.
 
 - O uso de ViewModel permite a separação clara entre a lógica de negócios e a lógica de UI, além de
