@@ -8,12 +8,13 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+    // Define o banco de dados e o DAO do lembrete.
     single {
         Room.databaseBuilder(get(), ReminderDb::class.java, "reminderdb")
             .fallbackToDestructiveMigration()
             .build()
     }
-    single { get<ReminderDb>().reminderDao() }
-    single { ReminderRepository(get()) }
-    viewModel { ReminderViewModel(get()) }
+    single { get<ReminderDb>().reminderDao() } // Fornece o DAO do lembrete.
+    single { ReminderRepository(get()) } // Fornece o repositório do lembrete.
+    viewModel { ReminderViewModel(get()) } // Fornece o ViewModel do lembrete.
 }

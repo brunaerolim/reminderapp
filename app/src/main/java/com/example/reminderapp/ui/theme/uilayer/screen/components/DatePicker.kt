@@ -6,7 +6,8 @@ import java.util.Calendar
 import java.util.Date
 
 fun showDatePickerDialog(context: Context, onDateSelected: (Date) -> Unit) {
-    val calendar = Calendar.getInstance()
+    //DatePicker
+    val calendar = Calendar.getInstance() //
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         calendar.set(year, month, dayOfMonth)
         onDateSelected(calendar.time)

@@ -9,5 +9,6 @@ import androidx.room.TypeConverters
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ReminderDb : RoomDatabase() {
+    // Fornece o DAO do lembrete.
     abstract fun reminderDao(): ReminderDao
 }

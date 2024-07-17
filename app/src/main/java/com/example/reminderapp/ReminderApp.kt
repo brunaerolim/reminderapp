@@ -6,6 +6,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
 class ReminderApp : Application() {
+    // Inicializa o Koin.
     override fun onCreate() {
         super.onCreate()
         startKoin {
