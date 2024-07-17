@@ -40,4 +40,4 @@ facilitar a manutenção, teste, e reutilização do código.
 
 ## Screenshot
 
-![image](app/src/main/res/drawable/screenshot.png)
+![github](https://github.com/user-attachments/assets/834fe355-6cf5-4766-8ef7-470c95d0a453)
