@@ -1,6 +1,6 @@
 # Descrição do Arquivo
 
-#### AppModule, ReminderApp, MainActivity
+### AppModule, ReminderApp, MainActivity
 
 - **Arquivo AppModule.kt**:
   _Koin como DI (Dependency Injection)_:

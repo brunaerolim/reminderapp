@@ -1,8 +1,6 @@
 # Descrição do Arquivo
 
-## ReminderDao, ReminderDb
-
-#### Decisões Tomadas:
+### ReminderDao, ReminderDb
 
 Define métodos de acesso aos dados do banco de dados. Neste
 caso, os métodos de inserção, atualização e exclusão de lembretes.
