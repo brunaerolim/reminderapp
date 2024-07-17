@@ -25,7 +25,7 @@
 
 ## Decisões do Projeto
 
-O projeto parece seguir uma arquitetura MVVM (Model-View-ViewModel), que é uma abordagem popular
+O projeto segue uma arquitetura MVVM (Model-View-ViewModel), que é uma abordagem popular
 para construir aplicativos Android modernos. A ideia principal do MVVM é separar a lógica de
 negócios (Model), a interface de usuário (View), e a lógica de apresentação (ViewModel) para
 facilitar a manutenção, teste, e reutilização do código.
