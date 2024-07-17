@@ -14,7 +14,7 @@
 - **Arquivo MainActivity:**
   Atividade principal do aplicativo, que contém a tela do aplicativo.
 
-- **Demais packages do app:** database package, model package, repositories package, view package e
+- **Demais packages do app:** 
   viewmodel package.
 
   - **database package:**
@@ -26,7 +26,7 @@
   - **repositories package:**
     Fornece uma camada entre o **DAO** e o **ViewModel**, facilitando a separação de responsabilidades.
 
-  - **view package:**
+  - **ui.theme:**
     Contém as classes de interface do usuário, como a atividade principal e os adaptadores de exibição.
 
   - **viewmodel package:**
