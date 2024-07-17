@@ -21,8 +21,8 @@ fun ReminderList(reminders: List<Reminder>, onDelete: (Reminder) -> Unit) {
         }.forEach { (date, reminders) ->
             item {
                 Text(
-                    text = "Novo lembrete",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "",
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .padding(0.dp, 0.dp, 0.dp, 8.dp)
                 )
