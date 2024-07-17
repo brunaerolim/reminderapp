@@ -1,9 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
     id("com.google.devtools.ksp")
-    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -60,12 +58,12 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.8")
     implementation ("androidx.activity:activity-compose:1.9.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation ("com.google.dagger:hilt-android:2.49")
     implementation("androidx.room:room-common:2.6.1")
-    kapt ("com.google.dagger:hilt-compiler:2.49")
     ksp("androidx.room:room-compiler:2.6.1")
     ksp("androidx.room:room-ktx:2.6.1")
+
+    implementation ("io.insert-koin:koin-android:3.3.3")
+    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
     implementation ("androidx.room:room-runtime:2.6.1")
     annotationProcessor ("androidx.room:room-ktx:2.6.1")
     implementation ("androidx.room:room-ktx:2.6.1")
@@ -78,7 +76,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-}
-kapt {
-    correctErrorTypes = true
 }

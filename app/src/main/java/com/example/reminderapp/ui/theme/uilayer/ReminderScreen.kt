@@ -22,15 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.reminderapp.ui.theme.uilayer.screen.components.showDatePickerDialog
 import com.example.reminderapp.viewmodel.ReminderViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 @Composable
-fun ReminderScreen(reminderViewModel: ReminderViewModel = viewModel()) {
+fun ReminderScreen(reminderViewModel: ReminderViewModel = koinViewModel()) {
     val context = LocalContext.current
     val selectedDate by reminderViewModel.selectedDate.collectAsState()
     val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
@@ -64,7 +63,7 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = if (selectedDate != null) dateFormat.format(selectedDate) else "",
+            value = selectedDate?.let { dateFormat.format(it) } ?: "",
             onValueChange = {},
             label = { Text("Date") },
             readOnly = true,
@@ -72,6 +71,7 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
+                    Toast.makeText(context, "Opening DatePicker", Toast.LENGTH_SHORT).show()
                     showDatePickerDialog(context) { date ->
                         reminderViewModel.updateSelectedDate(date)
                         dateError = false
@@ -95,14 +95,22 @@ fun ReminderScreen(reminderViewModel: ReminderViewModel = viewModel()) {
 
                 if (!titleError && !dateError) {
                     reminderViewModel.addReminder(title, selectedDate!!)
-                    Toast.makeText(context, "com.example.reminderapp.model.Reminder added", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Reminder added",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Please fill all fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text("Add com.example.reminderapp.model.Reminder")
+            Text("Add Reminder")
         }
     }
 }

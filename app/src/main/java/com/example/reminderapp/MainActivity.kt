@@ -5,15 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.reminderapp.ui.theme.ReminderappTheme
 import com.example.reminderapp.ui.theme.uilayer.ReminderScreen
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.compose.koinViewModel
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ReminderappTheme {
-                ReminderScreen()
+                ReminderScreen(reminderViewModel = koinViewModel())
             }
         }
     }

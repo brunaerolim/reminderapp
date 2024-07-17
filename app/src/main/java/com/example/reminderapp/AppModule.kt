@@ -1,26 +1,19 @@
 package com.example.reminderapp
 
-import android.app.Application
 import androidx.room.Room
-import com.example.reminderapp.database.ReminderDao
 import com.example.reminderapp.database.ReminderDb
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.example.reminderapp.repositories.ReminderRepository
+import com.example.reminderapp.viewmodel.ReminderViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
-    @Provides
-    @Singleton
-    fun provideDatabase(app: Application): ReminderDb {
-        return Room.databaseBuilder(app, ReminderDb::class.java, "reminderdb")
+val appModule = module {
+    single {
+        Room.databaseBuilder(get(), ReminderDb::class.java, "reminderdb")
             .fallbackToDestructiveMigration()
             .build()
     }
-
-    @Provides
-    fun provideReminderDao(db: ReminderDb): ReminderDao = db.reminderDao()
+    single { get<ReminderDb>().reminderDao() }
+    single { ReminderRepository(get()) }
+    viewModel { ReminderViewModel(get()) }
 }
