@@ -15,7 +15,7 @@ class ReminderViewModel(private val reminderRepository: ReminderRepository) : Vi
 
     val reminders = reminderRepository.getAllReminders()
 
-    fun updateSelectedDate(date: Date) {
+    fun updateSelectedDate(date: Date?) {
         _selectedDate.value = date
     }
 

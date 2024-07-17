@@ -1,34 +1,39 @@
 package com.example.reminderapp.ui.theme.uilayer.screen
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.reminderapp.model.Reminder
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ReminderItem(reminder: Reminder, onDelete: (Reminder) -> Unit) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(8.dp)
     ) {
-        Text(
-            text = reminder.title,
-            style = MaterialTheme.typography.bodyLarge,
+        Column(
             modifier = Modifier.weight(1f)
-        )
-        IconButton(onClick = { onDelete(reminder) }) {
-            Icons.Default.Delete
+        ) {
+            Text(
+                text = reminder.title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(reminder.date),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        IconButton(
+            onClick = { onDelete(reminder) }
+        ) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete Reminder")
         }
     }
 }

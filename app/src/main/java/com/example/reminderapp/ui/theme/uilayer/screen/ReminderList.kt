@@ -12,19 +12,15 @@ import com.example.reminderapp.model.Reminder
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 @Composable
 fun ReminderList(reminders: List<Reminder>, onDelete: (Reminder) -> Unit) {
     LazyColumn {
+
         reminders.groupBy { reminder ->
             SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(reminder.date)
         }.forEach { (date, reminders) ->
             item {
-                Text(
-                    text = date,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+
             }
             items(reminders) { reminder ->
                 ReminderItem(reminder = reminder, onDelete = onDelete)
